@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.springsecurity.Entity.RoleEntity;
 import com.example.springsecurity.Entity.UserEntity;
 import com.example.springsecurity.dto.RegisterRequestDto;
 import com.example.springsecurity.dto.RegisterResponsedto;
+import com.example.springsecurity.repository.RoleRepository;
 import com.example.springsecurity.repository.UserRepository;
 import com.example.springsecurity.serviceimpl.UserServiceImp;
 
@@ -17,6 +19,9 @@ public class Userservice implements UserServiceImp{
 	private PasswordEncoder passwordencoder;
 	@Autowired
 	private UserRepository repo;
+	
+	@Autowired
+	private RoleRepository rolerepo;
 
 	@Override
 	public RegisterResponsedto save(RegisterRequestDto request) {
@@ -25,6 +30,9 @@ public class Userservice implements UserServiceImp{
 		
 		userentity.setEmail(request.getEmail());
 		userentity.setPassword(passwordencoder.encode(request.getPassword()));
+		
+		RoleEntity role = rolerepo.findById(request.getRole()).orElseThrow(() -> new RuntimeException("role not found"));
+		userentity.setRole(role);
 		
 		UserEntity saved = repo.save(userentity);
 		
@@ -35,6 +43,7 @@ public class Userservice implements UserServiceImp{
 		response.setPassword(saved.getPassword());
 		response.setCreatedtime(saved.getCreatedtime());
 		response.setUpdatetime(saved.getUpdatetime());
+		response.setRoleid(saved.getRole());
 		
 		
 		

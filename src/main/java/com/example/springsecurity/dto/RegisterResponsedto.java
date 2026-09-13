@@ -2,19 +2,23 @@ package com.example.springsecurity.dto;
 
 import java.time.LocalDateTime;
 
+import com.example.springsecurity.Entity.RoleEntity;
+
 
 
 public class RegisterResponsedto {
 	
-    public RegisterResponsedto() {
+  
+	public RegisterResponsedto() {
 		super();
 	}
-	public RegisterResponsedto(Long id, String email, String password, LocalDateTime createdtime,
+	public RegisterResponsedto(Long id, String email, String password, RoleEntity roleid, LocalDateTime createdtime,
 			LocalDateTime updatetime) {
 		super();
 		this.id = id;
 		this.email = email;
 		this.password = password;
+		this.roleid = roleid;
 		this.createdtime = createdtime;
 		this.updatetime = updatetime;
 	}
@@ -36,6 +40,12 @@ public class RegisterResponsedto {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	public RoleEntity getRoleid() {
+		return roleid;
+	}
+	public void setRoleid(RoleEntity roleid) {
+		this.roleid = roleid;
+	}
 	public LocalDateTime getCreatedtime() {
 		return createdtime;
 	}
@@ -53,6 +63,8 @@ public class RegisterResponsedto {
 	private String email;
 
 	private String password;
+	
+	private RoleEntity roleid;
 	
 
 	private LocalDateTime createdtime;

@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.crypto.SecretKey;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +18,19 @@ public class JwtServices {
 	final String  Secret_key = "8f3c9a7e2d1b6f4a9c8e7d2f1a6b5c3e9d8f7a2b4c6e1d3f5a8b9c2d7e4f6";
 	
 	
-	public String generatetoken(String email) {
+	public String generatetoken(Authentication authentication) {
+		
+		String roles= authentication.getAuthorities()
+				.stream()
+				.findFirst()
+				.get()
+				.getAuthority();
+		
+		
 		
 		return Jwts.builder()
-				.subject(email)
+				.subject(authentication.getName())
+				.claim("role", roles)
 				.issuedAt(new Date())
 				.expiration(new Date(System.currentTimeMillis() + 1000*60*30))
 				.signWith(signedkey())
@@ -48,7 +58,7 @@ public class JwtServices {
 	}
 
 
-	private boolean isnotexpired(String token) {
+	public boolean isnotexpired(String token) {
 		Date exp = Jwts.parser()
 				.verifyWith(signedkey())
 				.build()
@@ -56,6 +66,17 @@ public class JwtServices {
 				.getPayload()
 				.getExpiration();
 		return exp.before(new Date());
+	}
+	
+	public String extractroles(String token) {
+		
+		return Jwts.parser()
+				.verifyWith(signedkey())
+				.build()
+				.parseSignedClaims(token)
+				.getPayload()
+				.get("role",String.class);
+		
 	}
 
 }
