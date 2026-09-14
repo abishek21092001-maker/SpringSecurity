@@ -30,12 +30,13 @@ public class JwtFilter extends OncePerRequestFilter{
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		
-		String header =request.getHeader("Authentication");
-		
-		if(!header.startsWith("Bearer ") || header == null) {
-			filterChain.doFilter(request, response);
-			
-		}
+		String header = request.getHeader("Authorization");
+
+	    // No JWT → continue the request
+	    if (header == null || !header.startsWith("Bearer ")) {
+	        filterChain.doFilter(request, response);
+	        return;
+	    }
 		
 		String token =header.substring(7);
 		
