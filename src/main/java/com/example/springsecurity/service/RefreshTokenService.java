@@ -21,7 +21,7 @@ public class RefreshTokenService {
 	public RefreshTokenEntity createrefershtoken(UserEntity user) {
 		
 		repo.deleteByUser(user);
-		RefreshTokenEntity ref = new RefreshTokenEntity();
+		RefreshTokenEntity ref = new RefreshTokenEntity()	;
 		ref.setRefershtoken(UUID.randomUUID().toString());
 		ref.setExpirydate(LocalDateTime.now().plusDays(7));
 		ref.setUser(user);
